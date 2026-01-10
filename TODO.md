@@ -1,7 +1,7 @@
-# TODO: Push to main and delete master branch
+# TODO: Fix submodules to make code files visible in main repo
 
-- [x] Create a new 'main' branch from the current 'master' branch
-- [x] Push the 'main' branch to the remote repository and set it as upstream
-- [x] Delete the local 'master' branch
-- [x] Delete the remote 'master' branch
-- [x] Verify that 'main' is now the active branch and 'master' is deleted locally and remotely
+- [ ] Remove the 'dnd_grid_game' submodule
+- [ ] Remove the 'UE-Rush' submodule
+- [ ] Add the 'dnd_grid_game' and 'UE-Rush' directories as regular files
+- [ ] Commit the changes
+- [ ] Push the updated 'main' branch to remote
