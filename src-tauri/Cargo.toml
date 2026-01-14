@@ -22,6 +22,7 @@ once_cell = "1.17"
 
 console_log = "1"
 console_error_panic_hook = "0.1"
+ipfs-api = "0.17"
 # phantom-wallet = "0.1" # or appropriate crate
 # metaplex-token-metadata = "0.3"
 

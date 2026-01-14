@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use crate::components::*;
 
-pub fn spawn_grid(mut commands: Commands, grid_size: i32) {
+pub fn spawn_grid(commands: &mut Commands, grid_size: i32) {
     for x in 0..grid_size {
         for y in 0..grid_size {
             commands.spawn((
@@ -21,7 +21,7 @@ pub fn spawn_grid(mut commands: Commands, grid_size: i32) {
     }
 }
 
-pub fn spawn_player(mut commands: Commands, pos: IVec2) {
+pub fn spawn_player(commands: &mut Commands, pos: IVec2) {
     commands.spawn((
         SpriteBundle {
             sprite: Sprite {
@@ -44,10 +44,22 @@ pub fn spawn_player(mut commands: Commands, pos: IVec2) {
         HasBonusAction(false),
         HasMovement(true),
         Dodging(false),
+    )).insert((
+        Level(1),
+        Experience(0),
+        Skills {
+            strength: 15,
+            dexterity: 14,
+            constitution: 13,
+            intelligence: 12,
+            wisdom: 10,
+            charisma: 8,
+        },
+        MagicPoints(10),
     ));
 }
 
-pub fn spawn_enemy(mut commands: Commands, pos: IVec2) {
+pub fn spawn_enemy(commands: &mut Commands, pos: IVec2) {
     commands.spawn((
         SpriteBundle {
             sprite: Sprite {
@@ -71,4 +83,9 @@ pub fn spawn_enemy(mut commands: Commands, pos: IVec2) {
         HasMovement(true),
         Dodging(false),
     ));
+}
+
+pub fn spawn_entities(commands: &mut Commands) {
+    spawn_player(commands, IVec2::new(0, 0));
+    spawn_enemy(commands, IVec2::new(9, 9));
 }

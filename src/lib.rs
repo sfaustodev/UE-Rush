@@ -24,10 +24,13 @@ fn App() -> impl IntoView {
     let (connected, set_connected) = create_signal(false);
     let (loading, set_loading) = create_signal(false);
     let (nfts, set_nfts) = create_signal(Vec::<wallet::Nft>::new());
+    let (has_soulbound, set_has_soulbound) = create_signal(false);
 
     let generate_seed = wallet::generate_seed_action();
     let connect_wallet = wallet::connect_wallet_action(expected_pubkey);
     let fetch_nfts = wallet::fetch_nfts_action();
+    let check_soulbound = wallet::check_soulbound_nft_action();
+    let create_free_world = wallet::create_free_world_nft_action();
 
     create_effect(move |_| {
         if let Some(Ok(data)) = generate_seed.value().get() {
@@ -65,8 +68,22 @@ fn App() -> impl IntoView {
 
     create_effect(move |_| {
         if let Some(nfts_val) = fetch_nfts.value().get() {
-            set_nfts.set(nfts_val);
+            set_nfts.set(nfts_val.clone());
+            // Check for soulbound free_world NFT
+            let has = nfts_val.iter().any(|nft| nft.name == "Soulbound Free World");
+            set_has_soulbound.set(has);
+            if !has {
+                // Create free_world NFT
+                create_free_world.dispatch(());
+            }
             set_loading.set(false);
+        }
+    });
+
+    create_effect(move |_| {
+        if let Some(Ok(_)) = create_free_world.value().get() {
+            // Refresh NFTs after creation
+            fetch_nfts.dispatch(());
         }
     });
 
@@ -94,23 +111,28 @@ fn App() -> impl IntoView {
             <h1>"UE-Rush Wallet"</h1>
             <Show
                 when=move || seed.get().is_empty()
-                fallback=move || view! {
+                fallback= || view! {
                     <Show
                         when=move || !timer_expired.get()
-                        fallback=move || view! {
+                        fallback= || view! {
                             <Show
                                 when=move || !connected.get()
-                                fallback=move || view! {
+                                fallback= || view! {
                                     <Show
                                         when=move || loading.get()
-                                        fallback=move || view! { nft::nft_display(nfts) }
+                                        fallback= || view! {
+                                            <div>
+                                                <div>"Soulbound Free World NFT: " {move || format!("{}", if has_soulbound.get() { "Yes" } else { "Creating..." }) }</div>
+                                                {nft::nft_display(nfts)}
+                                            </div>
+                                        }
                                     >
                                         <div>"Loading NFTs..."</div>
                                     </Show>
                                 }
                             >
                                 <div>
-                                    <button on:click=move |_| connect_wallet.dispatch(())>"Connect Phantom"</button>
+                                    <button on:click= |_| connect_wallet.dispatch(())>"Connect Phantom"</button>
                                     <div>{connect_wallet.value()}</div>
                                 </div>
                             </Show>
@@ -124,7 +146,7 @@ fn App() -> impl IntoView {
                     </Show>
                 }
             >
-                <button on:click=move |_| generate_seed.dispatch(())>"Generate Seed"</button>
+                <button on:click= |_| generate_seed.dispatch(())>"Generate Seed"</button>
             </Show>
         </div>
     }

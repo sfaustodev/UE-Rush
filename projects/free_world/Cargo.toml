@@ -1,8 +1,9 @@
 [package]
-name = "dnd_grid_game"
+name = "free_world"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
 bevy = "0.13.0"
 rand = "0.8"
+sled = "0.34"

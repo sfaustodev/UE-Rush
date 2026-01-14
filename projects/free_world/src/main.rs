@@ -1,3 +1,4 @@
+
 mod resources;
 mod components;
 mod systems;
@@ -7,17 +8,16 @@ mod movement;
 mod ui;
 mod ai;
 mod spawning;
+mod db;
 
 use bevy::prelude::*;
-use crate::components::*;
 use resources::*;
-use systems::*;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
-                title: "D&D Grid Game".to_string(),
+                title: "Free World Game".to_string(),
                 resolution: (640.0, 480.0).into(),
                 ..default()
             }),
@@ -26,8 +26,13 @@ fn main() {
         .insert_resource(TurnState(Turn::Player))
         .insert_resource(SelectedAction(Action::None))
         .insert_resource(PendingRoll { action: None, target: None })
-        .add_systems(Startup, (spawn_grid, spawn_entities, setup_ui, setup_camera))
-        .add_systems(Update, (handle_input, button_system, enemy_turn))
+        .add_systems(Startup, (
+            |mut commands: Commands| spawning::spawn_grid(&mut commands, 10),
+            |mut commands: Commands| spawning::spawn_entities(&mut commands),
+            ui::setup_ui,
+            setup_camera
+        ))
+        .add_systems(Update, (systems::handle_input.run_if(|turn_state: Res<TurnState>| turn_state.0 == Turn::Player), ui::button_system, systems::enemy_turn.run_if(|turn_state: Res<TurnState>| turn_state.0 == Turn::Enemy), systems::leveling_system))
         .run();
 }
 

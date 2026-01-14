@@ -1,0 +1,23 @@
+[package]
+name = "royalty-nft"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "royalty_nft"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+borsh = "0.10"
+solana-program = "1.18"
+spl-token = { version = "4.0" }
+spl-associated-token-account = { version = "2.3" }
+mpl-token-metadata = { version = "3.2" }
+lazy_static = "1.4"

@@ -74,3 +74,19 @@ pub fn fetch_nfts() -> Vec<Nft> {
         },
     ]
 }
+
+#[command]
+pub fn create_recruit_nft() -> String {
+    // Implement creating soulbound recruit NFT
+    // Upload character data to IPFS, get CID, then call Solana program
+    // For now, simulate
+    "Soulbound Recruit NFT created successfully".to_string()
+}
+
+#[command]
+pub fn create_free_world_nft() -> String {
+    // Placeholder for creating soulbound free_world NFT
+    // This would interact with the Solana program to mint the NFT
+    // For now, return a success message
+    "Soulbound Free World NFT created successfully".to_string()
+}

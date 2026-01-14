@@ -45,10 +45,32 @@ pub struct HasMovement(pub bool);
 pub struct Dodging(pub bool);
 
 #[derive(Component)]
+pub struct Level(pub i32);
+
+#[derive(Component)]
+pub struct Experience(pub i32);
+
+#[derive(Component)]
+pub struct Skills {
+    pub strength: i32,
+    pub dexterity: i32,
+    pub constitution: i32,
+    pub intelligence: i32,
+    pub wisdom: i32,
+    pub charisma: i32,
+}
+
+#[derive(Component)]
+pub struct MagicPoints(pub i32);
+
+#[derive(Component)]
 pub struct GridTile;
 
 #[derive(Component)]
 pub struct ActionButton(pub Action);
+
+#[derive(Component)]
+pub struct EndTurnButton;
 
 #[derive(Component)]
 pub struct DiceButton;

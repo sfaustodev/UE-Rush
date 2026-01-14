@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 use crate::components::*;
 use crate::game_rules::*;
-use crate::resources::Action;
 
 pub fn resolve_attack(
     attacker_pos: IVec2,
@@ -42,7 +41,7 @@ pub fn apply_damage(
 
 pub fn perform_opportunity_attack(
     _commands: &mut Commands,
-    attacker_query: &Query<(&Position, &AttackBonus, &Damage, &IsEnemy)>,
+    attacker_query: &Query<(&Position, &AttackBonus, &Damage, &IsEnemy), Without<IsPlayer>>,
     player_pos: IVec2,
     player_ac: i32,
 ) {

@@ -82,3 +82,34 @@ pub fn fetch_nfts_action() -> Rc<Action<(), Vec<Nft>>> {
         }
     }))
 }
+
+pub fn check_soulbound_nft_action() -> Rc<Action<(), bool>> {
+    Rc::new(create_action(move |()| async move {
+        // Fetch NFTs and check for soulbound free_world NFT
+        if let Some(nfts) = fetch_nfts_action().value().get() {
+            // Placeholder check: look for NFT with name "Soulbound Free World"
+            nfts.iter().any(|nft| nft.name == "Soulbound Free World")
+        } else {
+            false
+        }
+    }))
+}
+
+pub fn create_free_world_nft_action() -> Rc<Action<(), Result<String, JsValue>>> {
+    Rc::new(create_action(move |()| async move {
+        // Invoke Tauri command to create soulbound free_world NFT
+        invoke::<String>("create_free_world_nft", &()).await
+    }))
+}
+
+pub fn check_access_nft_action(world: String) -> Rc<Action<(), bool>> {
+    Rc::new(create_action(move |()| async move {
+        // Fetch NFTs and check for access NFT for the world
+        if let Some(nfts) = fetch_nfts_action().value().get() {
+            // Placeholder check: look for NFT with name "Access: {world}"
+            nfts.iter().any(|nft| nft.name == format!("Access: {}", world))
+        } else {
+            false
+        }
+    }))
+}
