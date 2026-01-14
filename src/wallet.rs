@@ -2,6 +2,7 @@ use leptos::*;
 use wasm_bindgen::prelude::*;
 use web_sys::window;
 use serde::{Deserialize, Serialize};
+use std::rc::Rc;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Nft {
@@ -20,14 +21,14 @@ pub async fn invoke<T: serde::de::DeserializeOwned>(cmd: &str, args: &impl serde
     Ok(serde_wasm_bindgen::from_value(result).unwrap())
 }
 
-pub fn generate_seed_action() -> Action<(), Result<String, JsValue>> {
-    create_action(move |()| async move {
+pub fn generate_seed_action() -> Rc<Action<(), Result<String, JsValue>>> {
+    Rc::new(create_action(move |()| async move {
         invoke::<String>("generate_bip39_seed", &()).await
-    })
+    }))
 }
 
-pub fn connect_wallet_action(expected_pubkey: ReadSignal<String>) -> Action<(), String> {
-    create_action(move |()| async move {
+pub fn connect_wallet_action(expected_pubkey: ReadSignal<String>) -> Rc<Action<(), String>> {
+    Rc::new(create_action(move |()| async move {
         // Connect to Phantom
         let window = web_sys::window().unwrap();
         let solana = js_sys::Reflect::get(&window, &"solana".into()).unwrap();
@@ -57,11 +58,11 @@ pub fn connect_wallet_action(expected_pubkey: ReadSignal<String>) -> Action<(), 
             }
             Err(e) => format!("Failed to connect: {:?}", e),
         }
-    })
+    }))
 }
 
-pub fn fetch_nfts_action() -> Action<(), Vec<Nft>> {
-    create_action(move |()| async move {
+pub fn fetch_nfts_action() -> Rc<Action<(), Vec<Nft>>> {
+    Rc::new(create_action(move |()| async move {
         if let Ok(nfts) = invoke::<Vec<Nft>>("fetch_nfts", &()).await {
             nfts
         } else {
@@ -79,5 +80,5 @@ pub fn fetch_nfts_action() -> Action<(), Vec<Nft>> {
                 },
             ]
         }
-    })
+    }))
 }

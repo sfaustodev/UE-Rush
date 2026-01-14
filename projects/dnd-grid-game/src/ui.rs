@@ -84,8 +84,8 @@ fn spawn_dice_button(parent: &mut ChildBuilder) {
 }
 
 pub fn button_system(
-    mut interaction_query: Query<(&Interaction, &ActionButton), Changed<Interaction>>,
-    mut dice_interaction: Query<(&Interaction, &DiceButton), Changed<Interaction>>,
+    interaction_query: Query<(&Interaction, &ActionButton), Changed<Interaction>>,
+    dice_interaction: Query<(&Interaction, &DiceButton), Changed<Interaction>>,
     mut selected_action: ResMut<crate::resources::SelectedAction>,
     mut pending_roll: ResMut<crate::resources::PendingRoll>,
 ) {
@@ -98,7 +98,7 @@ pub fn button_system(
     for (interaction, _) in &dice_interaction {
         if *interaction == Interaction::Pressed {
             if let Some(action) = pending_roll.action {
-                if let Some(target) = pending_roll.target {
+                if let Some(_target) = pending_roll.target {
                     // Perform the roll - this will be handled in combat system
                     println!("Rolling for {:?}", action);
                 }

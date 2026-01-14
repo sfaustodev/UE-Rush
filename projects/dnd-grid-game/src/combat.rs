@@ -41,7 +41,7 @@ pub fn apply_damage(
 }
 
 pub fn perform_opportunity_attack(
-    commands: &mut Commands,
+    _commands: &mut Commands,
     attacker_query: &Query<(&Position, &AttackBonus, &Damage, &IsEnemy)>,
     player_pos: IVec2,
     player_ac: i32,

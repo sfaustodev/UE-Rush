@@ -94,16 +94,16 @@ fn App() -> impl IntoView {
             <h1>"UE-Rush Wallet"</h1>
             <Show
                 when=move || seed.get().is_empty()
-                fallback=|| view! {
+                fallback=move || view! {
                     <Show
                         when=move || !timer_expired.get()
-                        fallback=|| view! {
+                        fallback=move || view! {
                             <Show
                                 when=move || !connected.get()
-                                fallback=|| view! {
+                                fallback=move || view! {
                                     <Show
                                         when=move || loading.get()
-                                        fallback=|| view! { nft::nft_display(nfts) }
+                                        fallback=move || view! { nft::nft_display(nfts) }
                                     >
                                         <div>"Loading NFTs..."</div>
                                     </Show>
