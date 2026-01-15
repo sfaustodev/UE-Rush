@@ -7,7 +7,7 @@ mod commands;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![commands::generate_bip39_seed, commands::get_public_key, commands::connect_phantom, commands::sign_message, commands::fetch_nfts, commands::create_recruit_nft, commands::create_free_world_nft, commands::start_bevy_game])
+        .invoke_handler(tauri::generate_handler![commands::generate_bip39_seed, commands::get_public_key, commands::connect_phantom, commands::sign_message, commands::fetch_nfts, commands::create_recruit_nft, commands::create_free_world_nft, commands::start_bevy_game, commands::speak_text, commands::roll_dice, commands::call_venice_api, commands::call_zai_api, commands::detect_language])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

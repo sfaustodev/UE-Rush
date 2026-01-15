@@ -43,7 +43,7 @@ fn main() {
             ui::setup_ui,
             setup_camera
         ))
-        .add_systems(Update, (systems::handle_input.run_if(|turn_state: Res<TurnState>| turn_state.0 == Turn::Player), ui::button_system, systems::enemy_turn.run_if(|turn_state: Res<TurnState>| turn_state.0 == Turn::Enemy), systems::leveling_system))
+        .add_systems(Update, (systems::handle_input.run_if(|turn_state: Res<TurnState>| turn_state.0 == Turn::Player), ui::button_system, systems::enemy_turn.run_if(|turn_state: Res<TurnState>| turn_state.0 == Turn::Enemy), systems::leveling_system, systems::voice_system, systems::animate_noise_signals))
         .run();
 }
 

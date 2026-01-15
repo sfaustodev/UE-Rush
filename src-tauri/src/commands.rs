@@ -1,6 +1,11 @@
 use tauri::command;
 use std::sync::Mutex;
 use once_cell::sync::Lazy;
+use tts::*;
+use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
+use reqwest;
+use rand::Rng;
+use whatlanggo::detect;
 
 static KEYPAIR: Lazy<Mutex<Option<solana_sdk::signer::keypair::Keypair>>> = Lazy::new(|| Mutex::new(None));
 
@@ -100,4 +105,53 @@ pub fn start_bevy_game(player_data: String) -> String {
         .expect("Failed to start Bevy game");
     // Note: In production, handle the child process properly, perhaps store it.
     "Bevy game started".to_string()
+}
+
+#[command]
+pub async fn speak_text(text: String) -> String {
+    let mut tts = Tts::default().unwrap();
+    tts.speak(text, false).unwrap();
+    "Speaking".to_string()
+}
+
+#[command]
+pub fn roll_dice(sides: u32, count: u32) -> Vec<u32> {
+    let mut rng = rand::thread_rng();
+    (0..count).map(|_| rng.gen_range(1..=sides)).collect()
+}
+
+#[command]
+pub async fn call_venice_api(prompt: String) -> String {
+    let api_key = std::env::var("VENICE_API_KEY").unwrap_or_default();
+    let client = reqwest::Client::new();
+    let res = client.post("https://api.venice.ai/chat/completions") // Assuming endpoint
+        .header("Authorization", format!("Bearer {}", api_key))
+        .json(&serde_json::json!({"model": "venice-uncensored", "messages": [{"role": "user", "content": prompt}]}))
+        .send()
+        .await;
+    match res {
+        Ok(resp) => resp.text().await.unwrap_or("Error".to_string()),
+        Err(_) => "API call failed".to_string(),
+    }
+}
+
+#[command]
+pub async fn call_zai_api(prompt: String) -> String {
+    let api_key = std::env::var("ZAI_API_KEY").unwrap_or_default();
+    let client = reqwest::Client::new();
+    let res = client.post("https://api.zai.ai/chat/completions") // Assuming endpoint
+        .header("Authorization", format!("Bearer {}", api_key))
+        .json(&serde_json::json!({"model": "zai-guardian", "messages": [{"role": "user", "content": prompt}]}))
+        .send()
+        .await;
+    match res {
+        Ok(resp) => resp.text().await.unwrap_or("Error".to_string()),
+        Err(_) => "API call failed".to_string(),
+    }
+}
+
+#[command]
+pub fn detect_language(text: String) -> String {
+    let info = detect(&text);
+    info.lang().to_string()
 }

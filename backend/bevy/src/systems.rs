@@ -95,3 +95,43 @@ pub fn enemy_turn(
 ) {
     enemy_turn_system(turn_state, enemy_query);
 }
+
+// Voice system
+pub fn voice_system(
+    mut commands: Commands,
+    query: Query<(&Position, &VoiceRange, Option<&WhisperSkill>), With<IsPlayer>>,
+    enemy_query: Query<&Position, With<IsEnemy>>,
+) {
+    for (pos, voice_range, whisper) in query.iter() {
+        let range = if whisper.map_or(false, |w| w.0) { voice_range.0.min(5) } else { voice_range.0 };
+        // Check if enemies within range
+        for e_pos in enemy_query.iter() {
+            if (e_pos.0.x - pos.0.x).abs() <= range && (e_pos.0.y - pos.0.y).abs() <= range {
+                // Spawn noise signal
+                commands.spawn((
+                    SpriteBundle {
+                        sprite: Sprite {
+                            color: Color::RED,
+                            custom_size: Some(Vec2::new(32.0, 32.0)),
+                            ..default()
+                        },
+                        transform: Transform::from_xyz(pos.0.x as f32 * 32.0, pos.0.y as f32 * 32.0, 1.0),
+                        ..default()
+                    },
+                    NoiseSignal,
+                ));
+            }
+        }
+    }
+}
+
+// Animate noise signals
+pub fn animate_noise_signals(
+    mut query: Query<&mut Sprite, With<NoiseSignal>>,
+    time: Res<Time>,
+) {
+    for mut sprite in query.iter_mut() {
+        let alpha = (time.elapsed_seconds() * 5.0).sin() * 0.5 + 0.5;
+        sprite.color.set_a(alpha);
+    }
+}

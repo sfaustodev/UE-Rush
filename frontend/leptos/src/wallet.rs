@@ -129,3 +129,49 @@ pub fn start_bevy_game_action(player_data: PlayerData) -> Rc<Action<(), Result<S
         }
     }))
 }
+
+pub fn speak_text_action() -> Rc<Action<String, Result<String, JsValue>>> {
+    Rc::new(create_action(move |text: &String| {
+        let text = text.clone();
+        async move {
+            invoke::<String>("speak_text", &text).await
+        }
+    }))
+}
+
+pub fn roll_dice_action() -> Rc<Action<(u32, u32), Vec<u32>>> {
+    Rc::new(create_action(move |(sides, count): &(u32, u32)| {
+        let sides = *sides;
+        let count = *count;
+        async move {
+            invoke::<Vec<u32>>("roll_dice", &(sides, count)).await.unwrap_or_default()
+        }
+    }))
+}
+
+pub fn call_venice_api_action() -> Rc<Action<String, Result<String, JsValue>>> {
+    Rc::new(create_action(move |prompt: &String| {
+        let prompt = prompt.clone();
+        async move {
+            invoke::<String>("call_venice_api", &prompt).await
+        }
+    }))
+}
+
+pub fn call_zai_api_action() -> Rc<Action<String, Result<String, JsValue>>> {
+    Rc::new(create_action(move |prompt: &String| {
+        let prompt = prompt.clone();
+        async move {
+            invoke::<String>("call_zai_api", &prompt).await
+        }
+    }))
+}
+
+pub fn detect_language_action() -> Rc<Action<String, String>> {
+    Rc::new(create_action(move |text: &String| {
+        let text = text.clone();
+        async move {
+            invoke::<String>("detect_language", &text).await.unwrap_or("unknown".to_string())
+        }
+    }))
+}

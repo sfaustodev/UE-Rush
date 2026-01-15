@@ -74,3 +74,12 @@ pub struct EndTurnButton;
 
 #[derive(Component)]
 pub struct DiceButton;
+
+#[derive(Component)]
+pub struct VoiceRange(pub i32); // grids
+
+#[derive(Component)]
+pub struct WhisperSkill(pub bool);
+
+#[derive(Component)]
+pub struct NoiseSignal; // for red flashing signals

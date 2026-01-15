@@ -56,6 +56,8 @@ pub fn spawn_player(commands: &mut Commands, pos: IVec2) {
             charisma: 8,
         },
         MagicPoints(10),
+        VoiceRange(10),
+        WhisperSkill(false),
     ));
 }
 

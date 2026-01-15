@@ -37,6 +37,17 @@ fn App() -> impl IntoView {
         nfts: nfts.get(),
     });
 
+    let roll_dice = wallet::roll_dice_action();
+    let (dice_result, set_dice_result) = create_signal(Vec::<u32>::new());
+    let (dice_sides, set_dice_sides) = create_signal(20);
+    let (dice_count, set_dice_count) = create_signal(1);
+
+    create_effect(move |_| {
+        if let Some(result) = roll_dice.value().get() {
+            set_dice_result.set(result);
+        }
+    });
+
     create_effect(move |_| {
         if let Some(Ok(data)) = generate_seed.value().get() {
             let parts: Vec<&str> = data.split('|').collect();
@@ -165,6 +176,14 @@ fn App() -> impl IntoView {
                     });
                     // TODO: Close or hide the Leptos UI
                 }>"Entrar no Mundo"</button>
+                <div>
+                    <h3>"Dice Roller"</h3>
+                    <input type="number" prop:value=dice_count on:input=move |e| set_dice_count.set(event_target_value(&e).parse().unwrap_or(1)) />
+                    <span>"d"</span>
+                    <input type="number" prop:value=dice_sides on:input=move |e| set_dice_sides.set(event_target_value(&e).parse().unwrap_or(20)) />
+                    <button on:click=move |_| roll_dice.dispatch((dice_sides.get(), dice_count.get()))>"Roll"</button>
+                    <div>"Result: " {move || format!("{:?}", dice_result.get())}</div>
+                </div>
             </Show>
         </div>
     }

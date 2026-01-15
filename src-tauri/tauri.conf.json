@@ -38,5 +38,13 @@
     "updater": {
       "active": false
     }
-  }
+  },
+  "capabilities": [
+    {
+      "identifier": "microphone",
+      "windows": ["Record"],
+      "macOS": ["Microphone"],
+      "linux": ["Microphone"]
+    }
+  ]
 }
