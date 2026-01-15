@@ -28,3 +28,19 @@
 - [x] Create non-soulbound class NFTs for each D&D 5e class
 - [x] Implement Solana program for immutable character mechanics
 - [x] Add IPFS integration for mutable JSON data (leveling, skills, magic points)
+
+
+## Completed
+- [x] Reorganized project structure into frontend/leptos and backend/bevy
+- [x] Moved Leptos code to frontend/leptos/
+- [x] Moved Bevy code to backend/bevy/
+- [x] Added start_bevy_game Tauri command
+- [x] Added "Entrar no Mundo" button in Leptos
+- [x] Updated Cargo.toml files for new structure
+
+## New
+- [] Combat 100% Bevy - Integrate Benai for combat narration via HTTP or Tauri IPC
+- [] Implement GameState enum in Bevy with Exploring and Combat modes
+- [] Add pause and grid spawning for combat
+- [] Connect combat to Benai AI for enemy actions
+- [] 

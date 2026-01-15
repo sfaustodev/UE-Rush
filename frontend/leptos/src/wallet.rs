@@ -113,3 +113,19 @@ pub fn check_access_nft_action(world: String) -> Rc<Action<(), bool>> {
         }
     }))
 }
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct PlayerData {
+    pub position: (f32, f32),
+    pub skills: Vec<String>,
+    pub nfts: Vec<Nft>,
+}
+
+pub fn start_bevy_game_action(player_data: PlayerData) -> Rc<Action<(), Result<String, JsValue>>> {
+    Rc::new(create_action(move |()| {
+        let data = player_data.clone();
+        async move {
+            invoke::<String>("start_bevy_game", &serde_json::to_string(&data).unwrap()).await
+        }
+    }))
+}

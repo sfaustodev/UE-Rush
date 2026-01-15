@@ -12,12 +12,23 @@ mod db;
 
 use bevy::prelude::*;
 use resources::*;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub enum GameState {
+    Exploring,
+    Combat { grid: Vec<Vec<Entity>>, enemy: Entity },
+}
 
 fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    let player_data = args.get(1).cloned().unwrap_or_else(|| "{}".to_string());
+    println!("Player data: {}", player_data);
+    // TODO: Deserialize and use player_data
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
-                title: "Free World Game".to_string(),
+                title: "UE-Rush Bevy Game".to_string(),
                 resolution: (640.0, 480.0).into(),
                 ..default()
             }),

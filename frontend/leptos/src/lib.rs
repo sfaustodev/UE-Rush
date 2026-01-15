@@ -31,6 +31,11 @@ fn App() -> impl IntoView {
     let fetch_nfts = wallet::fetch_nfts_action();
     let check_soulbound = wallet::check_soulbound_nft_action();
     let create_free_world = wallet::create_free_world_nft_action();
+    let start_bevy_game = wallet::start_bevy_game_action(wallet::PlayerData {
+        position: (0.0, 0.0),
+        skills: vec!["Basic Attack".to_string()], // Placeholder
+        nfts: nfts.get(),
+    });
 
     create_effect(move |_| {
         if let Some(Ok(data)) = generate_seed.value().get() {
@@ -147,6 +152,19 @@ fn App() -> impl IntoView {
                 }
             >
                 <button on:click= |_| generate_seed.dispatch(())>"Generate Seed"</button>
+            </Show>
+            <Show
+                when=move || !loading.get() && connected.get() && has_soulbound.get()
+                fallback=|| view! {}
+            >
+                <button on:click=move |_| {
+                    start_bevy_game.dispatch(wallet::PlayerData {
+                        position: (0.0, 0.0),
+                        skills: vec!["Basic Attack".to_string()],
+                        nfts: nfts.get(),
+                    });
+                    // TODO: Close or hide the Leptos UI
+                }>"Entrar no Mundo"</button>
             </Show>
         </div>
     }

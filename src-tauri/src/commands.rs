@@ -90,3 +90,14 @@ pub fn create_free_world_nft() -> String {
     // For now, return a success message
     "Soulbound Free World NFT created successfully".to_string()
 }
+
+#[command]
+pub fn start_bevy_game(player_data: String) -> String {
+    use std::process::Command;
+    let mut child = Command::new("./backend/bevy/target/debug/bevy-backend")
+        .arg(player_data)
+        .spawn()
+        .expect("Failed to start Bevy game");
+    // Note: In production, handle the child process properly, perhaps store it.
+    "Bevy game started".to_string()
+}
